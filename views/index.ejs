@@ -1,0 +1,77 @@
+<%- include('./common/header.ejs',{url:url,user:user}) %>
+
+
+<div class="main-container" id="main-container">
+  <script type="text/javascript">
+    try {
+      ace.settings.check('main-container', 'fixed')
+    } catch (e) {}
+  </script>
+
+  <div class="main-container-inner">
+    <a class="menu-toggler" id="menu-toggler" href="#">
+      <span class="menu-text"></span>
+    </a>
+
+    <!-- 左侧导航 -->
+    <%- include('./common/slider.ejs') %>
+
+    <!-- 内容区 -->
+
+    <div class="main-content">
+      <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+          try {
+            ace.settings.check('breadcrumbs', 'fixed')
+          } catch (e) {}
+        </script>
+
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home home-icon"></i>
+            <a href="#">首页</a>
+          </li>
+          <li class="active">控制台</li>
+        </ul><!-- .breadcrumb -->
+      </div>
+
+      <div class="page-content">
+        <div class="row">
+          这是首页 打算放echarts
+          <div id="echartsmain" style="width: 100%; height: 500px;"></div>
+          <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.js"></script>
+          <script>
+            var myChart = echarts.init(document.getElementById('echartsmain'));
+
+            myChart.setOption({
+              title: {
+                text: 'ECharts 入门示例'
+              },
+              tooltip: {},
+              xAxis: {
+                data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+              },
+              yAxis: {},
+              series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+              }]
+            })
+          </script>
+
+        </div><!-- /.row -->
+      </div><!-- /.page-content -->
+    </div><!-- /.main-content -->
+
+    <!-- 设置主题颜色区域 -->
+    <%- include('./common/ace-setting.ejs') %>
+
+  </div><!-- /.main-container-inner -->
+
+  <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+  </a>
+</div><!-- /.main-container -->
+
+<%- include('./common/footer.ejs') %>

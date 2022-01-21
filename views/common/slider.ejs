@@ -1,0 +1,43 @@
+ <% var tabbarList=[{name: "系统首页",url: "/",icon:"icon-exchange",role:1},
+                    {name: "轮播图管理",url: "/banner",icon:"icon-cloud-download",role:1},
+                    {name: "商品分类",url: "/cotegory",icon:"icon-bookmark",role:1},
+                    {name: "商品管理",url: "/goods",icon:"icon-bookmark",role:1},
+                    {name: "用户管理",url: "/users",icon:"icon-legal",role:1},
+                    {name: "购物车管理",url: "/cart",icon:"icon-fighter-jet",role:1},
+                    {name: "订单管理",url: "/order",icon:"icon-comment",role:2},
+                    {name: "消息管理", url: "/set",icon:"icon-cog",role:1},
+                    {name: "角色管理", url: "/admin",icon:"icon-cog",role:2}] %>
+
+ <div class="sidebar" id="sidebar">
+     <script type="text/javascript">
+         try {
+             ace.settings.check('sidebar', 'fixed')
+         } catch (e) {}
+     </script>
+
+     <!-- 左侧导航 -->
+     <ul class="nav nav-list">
+         <% for(var i=0;i<tabbarList.length;i++) { %>
+         <% if(user.role>=tabbarList[i].role){ %>
+         <li class="<%= url===tabbarList[i].url ? 'active' :'' %>">
+             <a href="<%- tabbarList[i].url %>">
+                 <i class="<%- tabbarList[i].icon %>"></i>
+                 <span class="menu-text"> <%- tabbarList[i].name %></span>
+             </a>
+         </li>
+         <% } %>
+         <% } %>
+     </ul><!-- /.nav-list -->
+     <!-- 左侧导航 -->
+
+
+     <div class="sidebar-collapse" id="sidebar-collapse">
+         <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+     </div>
+
+     <script type="text/javascript">
+         try {
+             ace.settings.check('sidebar', 'collapsed')
+         } catch (e) {}
+     </script>
+ </div>

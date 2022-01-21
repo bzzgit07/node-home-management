@@ -1,0 +1,208 @@
+<%- include('./common/header.ejs',{url:url,user:user}) %>
+
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {}
+    </script>
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+
+        <!-- 左侧导航 -->
+        <%- include('./common/slider.ejs') %>
+
+        <!-- 内容区 -->
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try {
+                        ace.settings.check('breadcrumbs', 'fixed')
+                    } catch (e) {}
+                </script>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="icon-home home-icon"></i>
+                        <a href="#">首页</a>
+                    </li>
+                    <li class="active">控制台</li>
+                </ul><!-- .breadcrumb -->
+            </div>
+
+            <div class="page-content">
+                <div class="row">
+                    <!-- 添加轮播图  -->
+                    <button type="button" class="btn btn-primary  btn-sm" data-toggle="modal"
+                        data-target=".bs-example-modal-sm">添加图片</button>
+                    <table class="table table-bordered table-hover " style="margin-top: 10px;">
+                        <tr>
+                            <th>序号</th>
+                            <th>banner图</th>
+                            <th>描述</th>
+                            <th>跳转地址</th>
+                            <th>操作</th>
+                        </tr>
+                        <%  for(var i=0; i<banners.length; i++) { %>
+                        <tr>
+                            <td><%- i+1 %></td>
+                            <td>
+                                <img src="<%- banners[i].img %>" alt="" style="width: 200px;">
+                            </td>
+                            <td><%- banners[i].desc %></td>
+                            <td><%- banners[i].url %></td>
+                            <td>
+                                <button class="btn btn-xs btn-info"
+                                    onclick="update('<%- banners[i]._id %>','<%- i+1 %>')">
+                                    <i class="icon-edit bigger-120"></i>
+                                </button>
+                                <button class="btn btn-xs btn-danger"
+                                    onclick="del('<%- banners[i]._id %>','<%- i+1 %>')">
+                                    <i class="icon-trash bigger-120"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </table>
+
+                    <!-- 提示是否删除 -->
+                    <div class="modal fade" id="alerts" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">删除轮播图</h4>
+                                </div>
+                                <div class="modal-body" id="contentalert"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary" id="confirmbtn">确认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+                        aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">上传banner图片</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="uploadbanner" class="control-label">上传banner:</label>
+                                            <input type="file" class="form-control" id="uploadbanner">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message" class="control-label">描述信息:</label>
+                                            <textarea class="form-control" id="message"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="url" class="control-label">跳转地址:</label>
+                                            <textarea class="form-control" id="url"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary " id="upload">上传</button>
+                                    <button type="button" class="btn btn-primary " id="updateupload">修改</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+        <!-- 设置主题颜色区域 -->
+        <%- include('./common/ace-setting.ejs') %>
+
+    </div><!-- /.main-container-inner -->
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+
+<%- include('./common/footer.ejs') %>
+<script>
+    $("#upload").click(function () {
+        var formData = new FormData();
+        formData.append('file', $("#uploadbanner")[0].files[0]);
+        formData.append('desc', $('#message').val());
+        formData.append('url', $('#url').val());
+        if ($("#uploadbanner").val() === "") {
+            return
+        };
+        $.ajax({
+            url: "/banner/upload",
+            type: "post",
+            data: formData,
+            contentType: false, // 注意 这两个必须加上
+            processData: false, // 注意 这两个必须加上,
+            success: function (res) {
+                console.log(res)
+                if (res.code === 200) {
+                    $('.bs-example-modal-sm').modal('hide');
+                    window.location.reload()
+                }
+            }
+        });
+
+    })
+    // 删除轮播图
+    function del(_id, i) {
+
+        $("#alerts").modal('show');
+        $("#contentalert").html('你是否要删除第' + i + '张轮播图？');
+        $("#confirmbtn").click(function () {
+            $.post("/banner/del", {
+                _id: _id
+            }, function (res) {
+                if (res.code === 200) {
+                    window.location.reload()
+                }
+            });
+            $('#alerts').modal('hide');
+        })
+    };
+
+    function update(_id, i) {
+        $('.bs-example-modal-sm').modal('show');
+        $("#updateupload").click(function () {
+            var formData = new FormData();
+            formData.append('file', $("#uploadbanner")[0].files[0]);
+            formData.append('desc', $('#message').val());
+            formData.append('url', $('#url').val());
+            formData.append('_id', _id);
+            if ($("#uploadbanner").val() === "") {
+                return
+            };
+            $.ajax({
+                url: "/banner/upload",
+                type: "post",
+                data: formData,
+                contentType: false, // 注意 这两个必须加上   vc 
+                processData: false, // 注意 这两个必须加上,
+                success: function (res) {
+                    console.log(res)
+                    if (res.code === 200) {
+                        $('.bs-example-modal-sm').modal('hide');
+                        window.location.reload()
+                    }
+                }
+            });
+        })
+    }
+</script>

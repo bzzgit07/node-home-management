@@ -1,0 +1,105 @@
+<%- include('./common/header.ejs',{url:url,user:user}) %>
+
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {}
+    </script>
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
+
+        <!-- 左侧导航 -->
+        <%- include('./common/slider.ejs') %>
+
+        <!-- 内容区 -->
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try {
+                        ace.settings.check('breadcrumbs', 'fixed')
+                    } catch (e) {}
+                </script>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="icon-home home-icon"></i>
+                        <a href="#">首页</a>
+                    </li>
+                    <li class="active">控制台</li>
+                </ul><!-- .breadcrumb -->
+            </div>
+            <div class="page-content">
+                <div class="row">
+                    <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target=".bs-example-modal-sm">添加分类</button>
+                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+                        aria-labelledby="mySmallModalLabel">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="exampleModalLabel">添加分类</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="cotegory" class="control-label">分类名称:</label>
+                                            <input type="text" class="form-control" id="cotegory" />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button type="button" class="btn btn-primary " id="confirm">确认</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 列表渲染 -->
+                    <table class="table table-bordered table-hover ">
+                        <% for(var i=0; i<cotegoryList.length;i++) { %>
+                        <tr>
+                            <td><%- cotegoryList[i].name  %></td>
+                        </tr>
+                        <% } %>
+                    </table>
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div><!-- /.main-content -->
+
+        <!-- 设置主题颜色区域 -->
+        <%- include('./common/ace-setting.ejs') %>
+
+    </div><!-- /.main-container-inner -->
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="icon-double-angle-up icon-only bigger-110"></i>
+    </a>
+</div><!-- /.main-container -->
+
+<%- include('./common/footer.ejs') %>
+
+
+<script>
+    $("#confirm").click(function () {
+        if ($("#cotegory").val() === "") {
+            return
+        };
+        $.get("/cotegory/add", {
+            name: $("#cotegory").val()
+        }, function (res) {
+            if (res.code === 200) {
+                $('.bs-example-modal-sm').modal('hide');
+                window.location.reload()
+            }
+        })
+    })
+</script>
